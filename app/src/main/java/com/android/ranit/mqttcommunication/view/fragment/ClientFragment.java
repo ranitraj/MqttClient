@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.android.ranit.mqttcommunication.R;
 
 public class ClientFragment extends Fragment {
+    public static final String TAG = ClientFragment.class.getSimpleName();
 
     public ClientFragment() {
         // Required empty public constructor
