@@ -1,0 +1,26 @@
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.activity.SplashActivity">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieViewSplash"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintHeight_percent="0.2"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.5"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="false" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
