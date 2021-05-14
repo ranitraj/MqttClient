@@ -43,6 +43,10 @@ dependencies {
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+    // Lifecycle Extensions
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
