@@ -1,8 +1,10 @@
-package com.android.ranit.mqttcommunication;
+package com.android.ranit.mqttcommunication.view.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.android.ranit.mqttcommunication.R;
 
 public class MainActivity extends AppCompatActivity {
 
