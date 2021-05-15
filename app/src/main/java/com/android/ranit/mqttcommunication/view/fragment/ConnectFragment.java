@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.ranit.mqttcommunication.R;
+import com.android.ranit.mqttcommunication.common.MqttClientUtil;
 import com.android.ranit.mqttcommunication.contract.ConnectContract;
 import com.android.ranit.mqttcommunication.databinding.FragmentConnectBinding;
 import com.android.ranit.mqttcommunication.viewModel.MqttClientViewModel;
@@ -24,6 +25,7 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
 
     private FragmentConnectBinding mBinding;
     private MqttClientViewModel mViewModel;
+    private MqttClientUtil mMqttClientUtilInstance;
 
     private String mServerUri, mClientId, mUserName, mPassword;
 
@@ -34,6 +36,8 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mMqttClientUtilInstance = MqttClientUtil.getInstance();
     }
 
     @Override
@@ -93,6 +97,9 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         // Click Listener
         mBinding.buttonConnect.setOnClickListener(view -> {
             prepareDataForBrokerConnection();
+
+            // Initialize the MqttAndroidService in Utility
+            mMqttClientUtilInstance.initializeMqttAndroidClient(getContext(), mServerUri, mClientId);
 
             if (mViewModel != null) {
                 mViewModel.connectToMqttBroker(mServerUri, mClientId, mUserName, mPassword);
