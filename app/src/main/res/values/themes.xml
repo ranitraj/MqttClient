@@ -20,4 +20,10 @@
         <item name="color">@color/headerText</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="TextView.Header.Large" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="color">@color/headerText</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

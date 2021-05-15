@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/publish_message_to_mqtt_broker"
-            style="@style/TextView.Header.XLarge"
+            style="@style/TextView.Header.Large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,7 +25,7 @@
             app:startIconTint="@color/purple_500"
             android:textColorHint="@color/purple_200"
             android:hint="@string/topic"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_8"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvPublishHeader"
@@ -48,7 +48,7 @@
             app:startIconTint="@color/purple_500"
             android:textColorHint="@color/purple_200"
             android:hint="@string/message"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_8"
             android:layout_marginBottom="@dimen/dp_16"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -63,6 +63,67 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/tvQosLevelSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/qos_level"
+            style="@style/TextView.Header.Large"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTvPublishMessage" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/sliderPublishQosLevel"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_0"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintHeight_percent="0.07"
+            android:stepSize="1.0"
+            android:valueFrom="0"
+            android:valueTo="2"
+            android:value="1"
+            app:trackColorActive="@color/purple_200"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvQosLevelSubHeader"/>
+
+        <TextView
+            android:id="@+id/tvRetainFlagSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/retain_flag"
+            style="@style/TextView.Header.Large"
+            android:layout_marginTop="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="@id/toggleGroupRetainFlag"
+            app:layout_constraintTop_toBottomOf="@id/editTvPublishMessage" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleGroupRetainFlag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:checkedButton="@id/buttonEnable"
+            app:singleSelection="true"
+            app:layout_constraintTop_toBottomOf="@id/tvRetainFlagSubHeader"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/buttonEnable"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintWidth_percent="0.2"
+                android:text="Enable" />
+
+            <Button
+                android:id="@+id/buttonDisable"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Disable" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonPublish"
             android:layout_width="@dimen/dp_0"
@@ -70,16 +131,15 @@
             app:layout_constraintWidth_percent="0.5"
 
             android:text="@string/publish"
-            android:textStyle="bold"
-            android:layout_marginTop="@dimen/dp_16"
             android:paddingStart="@dimen/dp_32"
             android:paddingEnd="@dimen/dp_32"
             android:paddingTop="@dimen/dp_8"
             android:paddingBottom="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_8"
             android:textSize="@dimen/sp_16"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editTvPublishMessage"
+            app:layout_constraintTop_toBottomOf="@id/sliderPublishQosLevel"
             app:icon="@drawable/ic_publish"
             style="@style/Widget.MaterialComponents.Button.Icon"/>
 
@@ -88,7 +148,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/subscribe_to_mqtt_broker"
-            style="@style/TextView.Header.XLarge"
+            style="@style/TextView.Header.Large"
             android:layout_marginTop="@dimen/dp_60"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/buttonPublish" />
@@ -102,7 +162,7 @@
             app:startIconTint="@color/purple_500"
             android:textColorHint="@color/purple_200"
             android:hint="@string/topic"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_8"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSubscribeHeader"
@@ -116,6 +176,32 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/tvQosLevelSubHeader1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/qos_level"
+            style="@style/TextView.Header.Large"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="@id/sliderSubscribeQosLevel"
+            app:layout_constraintTop_toBottomOf="@id/editTvSubscribeTopic" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/sliderSubscribeQosLevel"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_0"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintHeight_percent="0.07"
+            android:stepSize="1.0"
+            android:valueFrom="0"
+            android:valueTo="2"
+            android:value="1"
+            app:trackColorActive="@color/purple_200"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvQosLevelSubHeader1"/>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSubscribe"
             android:layout_width="@dimen/dp_0"
@@ -123,13 +209,11 @@
             app:layout_constraintWidth_percent="0.45"
 
             android:text="@string/subscribe"
-            android:textStyle="bold"
-            android:layout_marginTop="@dimen/dp_16"
             android:padding="@dimen/dp_8"
             android:textSize="@dimen/sp_16"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonUnSubscribe"
-            app:layout_constraintTop_toBottomOf="@id/editTvSubscribeTopic"
+            app:layout_constraintTop_toBottomOf="@id/sliderSubscribeQosLevel"
             app:icon="@drawable/ic_subscribe"
             style="@style/Widget.MaterialComponents.Button.Icon"/>
 
@@ -139,14 +223,12 @@
             android:layout_height="wrap_content"
 
             android:text="@string/unsubscribe"
-            android:textStyle="bold"
-            android:layout_marginTop="@dimen/dp_16"
             android:paddingTop="@dimen/dp_8"
             android:paddingBottom="@dimen/dp_8"
             android:textSize="@dimen/sp_16"
             app:layout_constraintStart_toEndOf="@id/buttonSubscribe"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editTvSubscribeTopic"
+            app:layout_constraintTop_toBottomOf="@id/sliderSubscribeQosLevel"
             app:icon="@drawable/ic_unsubscribe"
             style="@style/Widget.MaterialComponents.Button.Icon"/>
 
@@ -157,7 +239,6 @@
             app:layout_constraintWidth_percent="0.5"
 
             android:text="@string/disconnect"
-            android:textStyle="bold"
             android:paddingStart="@dimen/dp_16"
             android:paddingEnd="@dimen/dp_16"
             android:paddingTop="@dimen/dp_8"
@@ -176,7 +257,6 @@
             app:layout_constraintWidth_percent="0.5"
 
             android:text="@string/clear"
-            android:textStyle="bold"
             android:paddingStart="@dimen/dp_32"
             android:paddingEnd="@dimen/dp_32"
             android:paddingTop="@dimen/dp_8"
