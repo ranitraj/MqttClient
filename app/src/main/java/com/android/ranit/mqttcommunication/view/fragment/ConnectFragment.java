@@ -17,6 +17,7 @@ import com.android.ranit.mqttcommunication.common.MqttClientUtil;
 import com.android.ranit.mqttcommunication.contract.ConnectContract;
 import com.android.ranit.mqttcommunication.databinding.FragmentConnectBinding;
 import com.android.ranit.mqttcommunication.viewModel.MqttClientViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -98,11 +99,17 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         mBinding.buttonConnect.setOnClickListener(view -> {
             prepareDataForBrokerConnection();
 
-            // Initialize the MqttAndroidService in Utility
-            mMqttClientUtilInstance.initializeMqttAndroidClient(getContext(), mServerUri, mClientId);
+            if (!mServerUri.equals("") && !mClientId.equals("")) {
+                // Initialize the MqttAndroidService in Utility
+                mMqttClientUtilInstance.initializeMqttAndroidClient(getContext(), mServerUri, mClientId);
 
-            if (mViewModel != null) {
-                mViewModel.connectToMqttBroker(mServerUri, mClientId, mUserName, mPassword);
+                if (mViewModel != null) {
+                    mViewModel.connectToMqttBroker(mServerUri, mClientId, mUserName, mPassword);
+                }
+            } else {
+                Snackbar.make(mBinding.layoutParent, "Fill necessary data to proceed",
+                        Snackbar.LENGTH_SHORT)
+                        .show();
             }
         });
     }

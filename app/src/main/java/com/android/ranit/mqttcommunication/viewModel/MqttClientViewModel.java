@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 
 import com.android.ranit.mqttcommunication.common.MqttClientUtil;
 import com.android.ranit.mqttcommunication.contract.ConnectContract;
@@ -38,28 +39,30 @@ public class MqttClientViewModel extends AndroidViewModel implements ConnectCont
                 new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken iMqttToken) {
-
+                        Log.d(TAG, "onSuccess: Connected to Broker");
                     }
 
                     @Override
                     public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-
+                        Log.e(TAG, "onFailure: Could not connect to Broker");
                     }
                 },
+                
                 new MqttCallback() {
                     @Override
                     public void connectionLost(Throwable throwable) {
-
+                        Log.e(TAG, "connectionLost: Could not connect due to "+throwable.toString());
                     }
 
                     @Override
-                    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-
+                    public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                        String message = "Received message: "+mqttMessage.toString()+" from topic: "+topic;
+                        Log.d(TAG, message);
                     }
 
                     @Override
                     public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
+                        Log.d(TAG, "deliveryComplete: ");
                     }
                 });
     }

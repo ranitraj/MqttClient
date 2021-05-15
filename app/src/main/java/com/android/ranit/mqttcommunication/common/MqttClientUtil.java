@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -19,10 +20,6 @@ public class MqttClientUtil {
 
     private static MqttClientUtil INSTANCE;
     private MqttAndroidClient mMqttClient;
-
-    private Context mContext;
-    private String mServerUri;
-    private String mClientId;
 
     /**
      * Returns a Singleton Instance of this class
@@ -44,35 +41,30 @@ public class MqttClientUtil {
      * Initialize MqttAndroidClient (From View)
      */
     public void initializeMqttAndroidClient(Context context, String serverUri, String clientId) {
-        Log.d(TAG, "initializeMqttAndroidClient() called with: context = [" + context + "], " +
-                "serverUri = [" + serverUri + "], clientId = [" + clientId + "]");
-
-        this.mContext = context;
-        this.mServerUri = serverUri;
-        this.mClientId = clientId;
+        Log.d(TAG, "initializeMqttAndroidClient() called with: serverUri = [" + serverUri + "], " +
+                "clientId = [" + clientId + "]");
 
         mMqttClient = new MqttAndroidClient(context, serverUri, clientId);
     }
 
     /**
-     * Connect to Mqtt Broker
+     * Connect to MQTT Broker
      */
     public void connectToBroker(String userName, String password,
-                                IMqttActionListener mqttActionListener, MqttCallback mqttCallback) {
-        Log.d(TAG, "connectToBroker() called with: userName = [" + userName + "], " +
-                "password = [" + password + "], mqttActionListener = [" + mqttActionListener + "], " +
-                "mqttCallback = [" + mqttCallback + "]");
+                                IMqttActionListener listener, MqttCallback callback) {
+        Log.d(TAG, "connectToBroker() called");
 
-        mMqttClient.setCallback(mqttCallback);
+        mMqttClient.setCallback(callback);
 
-        MqttConnectOptions connectOptions = new MqttConnectOptions();
-        connectOptions.setUserName(userName);
-        connectOptions.setPassword(password.toCharArray());
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setUserName(userName);
+        options.setPassword(password.toCharArray());
 
         try {
-            mMqttClient.connect(connectOptions, null, mqttActionListener);
+            Log.d(TAG, "connectToBroker Connecting..");
+            mMqttClient.connect(options, null, listener);
         } catch (MqttException e) {
-            e.printStackTrace();
+            Log.e(TAG, "connectToBroker Exception: "+e.toString() );
         }
     }
 }
