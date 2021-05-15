@@ -25,6 +25,9 @@
 
             </intent-filter>
         </activity>
+        
+        <!-- MQTT Android Client Service -->
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
     </application>
 
 </manifest>
