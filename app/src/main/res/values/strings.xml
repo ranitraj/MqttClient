@@ -12,8 +12,8 @@
     <string name="message">Enter Message/Payload</string>
     <string name="publish">Publish</string>
     <string name="disconnect">Disconnect</string>
-    <string name="publish_message_to_mqtt_broker">Publish message to MQTT broker:</string>
-    <string name="subscribe_to_mqtt_broker">Subscribe/Unsubscribe to MQTT Broker:</string>
+    <string name="publish_message_to_mqtt_broker">Publish message to MQTT Topic:</string>
+    <string name="subscribe_to_mqtt_broker">Subscribe/Unsubscribe to MQTT Topic:</string>
     <string name="subscribe">Subscribe</string>
     <string name="unsubscribe">Unsubscribe</string>
     <string name="qos_level">Select QoS Level</string>
