@@ -112,7 +112,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonClearConnect"
+            android:id="@+id/buttonConnect"
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
             app:layout_constraintWidth_percent="0.5"

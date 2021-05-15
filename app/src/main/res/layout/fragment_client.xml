@@ -1,14 +1,192 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.fragment.ClientFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_margin="@dimen/dp_16"
+        tools:context=".view.fragment.ClientFragment">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tvPublishHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/publish_message_to_mqtt_broker"
+            style="@style/TextView.Header.XLarge"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editTvPublishTopic"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_0"
+            app:layout_constraintHeight_percent="0.08"
+            app:startIconDrawable="@drawable/ic_topic"
+            app:startIconTint="@color/purple_500"
+            android:textColorHint="@color/purple_200"
+            android:hint="@string/topic"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvPublishHeader"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:singleLine="true"
+                android:inputType="text"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editTvPublishMessage"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_0"
+            app:layout_constraintHeight_percent="0.08"
+            app:startIconDrawable="@drawable/ic_message"
+            app:startIconTint="@color/purple_500"
+            android:textColorHint="@color/purple_200"
+            android:hint="@string/message"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTvPublishTopic"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:singleLine="true"
+                android:inputType="text"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonPublish"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.5"
+
+            android:text="@string/publish"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/dp_16"
+            android:paddingStart="@dimen/dp_32"
+            android:paddingEnd="@dimen/dp_32"
+            android:paddingTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_8"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTvPublishMessage"
+            app:icon="@drawable/ic_publish"
+            style="@style/Widget.MaterialComponents.Button.Icon"/>
+
+        <TextView
+            android:id="@+id/tvSubscribeHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/subscribe_to_mqtt_broker"
+            style="@style/TextView.Header.XLarge"
+            android:layout_marginTop="@dimen/dp_60"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonPublish" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editTvSubscribeTopic"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_0"
+            app:layout_constraintHeight_percent="0.08"
+            app:startIconDrawable="@drawable/ic_topic"
+            app:startIconTint="@color/purple_500"
+            android:textColorHint="@color/purple_200"
+            android:hint="@string/topic"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvSubscribeHeader"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:singleLine="true"
+                android:inputType="text"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSubscribe"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.45"
+
+            android:text="@string/subscribe"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/dp_16"
+            android:padding="@dimen/dp_8"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttonUnSubscribe"
+            app:layout_constraintTop_toBottomOf="@id/editTvSubscribeTopic"
+            app:icon="@drawable/ic_subscribe"
+            style="@style/Widget.MaterialComponents.Button.Icon"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonUnSubscribe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="@string/unsubscribe"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_8"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintStart_toEndOf="@id/buttonSubscribe"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTvSubscribeTopic"
+            app:icon="@drawable/ic_unsubscribe"
+            style="@style/Widget.MaterialComponents.Button.Icon"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDisconnect"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.5"
+
+            android:text="@string/disconnect"
+            android:textStyle="bold"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_8"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/buttonClearTextFields"
+            app:icon="@drawable/ic_disconnect"
+            style="@style/Widget.MaterialComponents.Button.Icon"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonClearTextFields"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.5"
+
+            android:text="@string/clear"
+            android:textStyle="bold"
+            android:paddingStart="@dimen/dp_32"
+            android:paddingEnd="@dimen/dp_32"
+            android:paddingTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_8"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:icon="@drawable/ic_clear"
+            style="@style/Widget.MaterialComponents.Button.Icon"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

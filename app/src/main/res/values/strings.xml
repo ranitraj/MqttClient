@@ -9,4 +9,12 @@
     <string name="clear">Clear</string>
     <string name="connect">Connect</string>
     <string name="connect_to_broker">Connect to MQTT Broker:</string>
+    <string name="topic">Enter Topic</string>
+    <string name="message">Enter Message</string>
+    <string name="publish">Publish</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="publish_message_to_mqtt_broker">Publish message to MQTT broker:</string>
+    <string name="subscribe_to_mqtt_broker">Subscribe to MQTT Broker:</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="unsubscribe">Unsubscribe</string>
 </resources>
