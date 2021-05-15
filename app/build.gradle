@@ -46,8 +46,9 @@ dependencies {
     // Lottie
     implementation 'com.airbnb.android:lottie:3.4.1'
 
-    // Eclipse Paho MQTT Jar (Library)
+    // Eclipse Paho Android Service and MQTT Jar (Library)
     implementation files('libs/org.eclipse.paho.android.service-1.1.1.jar')
+    implementation files('libs/org.eclipse.paho.client.mqttv3-1.2.5.jar')
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
