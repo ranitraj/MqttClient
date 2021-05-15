@@ -7,4 +7,5 @@
     <dimen name="dp_32">32dp</dimen>
 
     <dimen name="sp_16">16sp</dimen>
+    <dimen name="sp_24">24sp</dimen>
 </resources>
