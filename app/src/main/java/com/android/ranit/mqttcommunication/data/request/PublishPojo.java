@@ -7,7 +7,7 @@ public class PublishPojo {
     private boolean retainFlag;
 
     // Constructor
-    private PublishPojo(String topic, String payload, int qosLevel, boolean retainFlag) {
+    public PublishPojo(String topic, String payload, int qosLevel, boolean retainFlag) {
         this.topic = topic;
         this.payload = payload;
         this.qosLevel = qosLevel;

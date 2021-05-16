@@ -3,11 +3,14 @@ package com.android.ranit.mqttcommunication.common;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.ranit.mqttcommunication.data.request.PublishPojo;
+
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 /**
  * Utility Class which facilitates all Mqtt Client operations
@@ -80,5 +83,20 @@ public class MqttClientUtil {
     /**
      * Publish Message to MQTT Broker
      */
+    public void publish(PublishPojo data, IMqttActionListener listener) {
+        try {
+            MqttMessage message = new MqttMessage();
+            message.setPayload(data.getPayload().getBytes());
+            message.setQos(data.getQosLevel());
+            message.setRetained(data.isRetainFlag());
 
+            Log.d(TAG, "publish: Publishing data to broker with Topic = [" +data.getTopic()+ "], " +
+                            "Payload = [" +data.getPayload()+ "], QoS Level = [" + data.getQosLevel() + "], Retention Flag = [" +
+                            data.isRetainFlag() + "]");
+
+            mMqttClient.publish(data.getTopic(), message, null, listener);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
 }

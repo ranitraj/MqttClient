@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.ranit.mqttcommunication.R;
+import com.android.ranit.mqttcommunication.common.InputValidation;
 import com.android.ranit.mqttcommunication.common.MqttClientUtil;
 import com.android.ranit.mqttcommunication.contract.ConnectContract;
 import com.android.ranit.mqttcommunication.data.response.DataResponse;
@@ -80,6 +81,7 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
 
         if (getActivity() != null) {
             mViewModel = new ViewModelProvider(this).get(MqttClientViewModel.class);
+            attachObserver();
         } else {
             Log.e(TAG, "ViewModel could not be initialized");
         }
@@ -134,21 +136,17 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         mBinding.buttonConnect.setOnClickListener(view -> {
             Log.d(TAG, "onConnectButtonClicked() called");
 
-            // Attach Observer
-            mViewModel.getConnectToBrokerLiveData()
-                    .observe(getViewLifecycleOwner(), observerConnectToBroker);
-
             prepareDataForBrokerConnection();
 
-            if (!mServerUri.equals("") && !mClientId.equals("")) {
+            if (InputValidation.isEmpty(mServerUri) || InputValidation.isEmpty(mClientId)) {
+                displayMessage("Fill Server-URI and Client-ID before connecting");
+            } else {
                 // Initialize the MqttAndroidService in Utility
                 mMqttClientUtilInstance.initializeMqttAndroidClient(getContext(), mServerUri, mClientId);
 
                 if (mViewModel != null) {
                     mViewModel.connectToMqttBroker(mServerUri, mClientId, mUserName, mPassword);
                 }
-            } else {
-                displayMessage("Fill all mandatory fields to proceed.");
             }
         });
     }
@@ -175,6 +173,12 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
                 mBinding.editTvPassword.getEditText().setText("");
             }
         });
+    }
+
+    @Override
+    public void attachObserver() {
+        mViewModel.getConnectToBrokerLiveData()
+                .observe(getViewLifecycleOwner(), observerConnectToBroker);
     }
 
     @Override

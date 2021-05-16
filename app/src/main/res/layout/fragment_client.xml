@@ -114,14 +114,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintWidth_percent="0.2"
-                android:text="Enable" />
+                android:text="@string/enable" />
 
             <Button
                 android:id="@+id/buttonDisable"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Disable" />
+                android:text="@string/disable" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 

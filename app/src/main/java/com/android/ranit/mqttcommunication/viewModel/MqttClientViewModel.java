@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.ranit.mqttcommunication.common.MqttClientUtil;
 import com.android.ranit.mqttcommunication.contract.ClientContract;
 import com.android.ranit.mqttcommunication.contract.ConnectContract;
+import com.android.ranit.mqttcommunication.data.request.PublishPojo;
 import com.android.ranit.mqttcommunication.data.response.DataResponse;
 import com.android.ranit.mqttcommunication.data.response.Error;
 import com.android.ranit.mqttcommunication.data.response.States;
@@ -28,6 +29,7 @@ public class MqttClientViewModel extends AndroidViewModel
 
     private final MutableLiveData<DataResponse> mConnectBrokerMutableLiveData;
     private final MutableLiveData<DataResponse> mDisconnectBrokerMutableLiveData;
+    private final MutableLiveData<DataResponse> mPublishMutableLiveData;
 
     // Constructor
     public MqttClientViewModel(@NonNull @NotNull Application application) {
@@ -37,6 +39,7 @@ public class MqttClientViewModel extends AndroidViewModel
 
         mConnectBrokerMutableLiveData = new MutableLiveData<>();
         mDisconnectBrokerMutableLiveData = new MutableLiveData<>();
+        mPublishMutableLiveData = new MutableLiveData<>();
     }
 
     @Override
@@ -86,13 +89,6 @@ public class MqttClientViewModel extends AndroidViewModel
                 });
     }
 
-    /**
-     * Get Live Data response from connectToBroker method
-     */
-    public LiveData<DataResponse> getConnectToBrokerLiveData() {
-        return mConnectBrokerMutableLiveData;
-    }
-
     @Override
     public void disconnectFromMqttBroker() {
         Log.d(TAG, "disconnectFromMqttBroker() called");
@@ -137,10 +133,68 @@ public class MqttClientViewModel extends AndroidViewModel
         });
     }
 
+    @Override
+    public void publishDataToMqttBroker(PublishPojo data) {
+        Log.d(TAG, "publishDataToMqttBroker() called");
+
+        // Initially, Setting Status as LOADING
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            mPublishMutableLiveData
+                    .setValue(new DataResponse(States.EnumStates.LOADING, false, null));
+        } else {
+            mPublishMutableLiveData
+                    .postValue(new DataResponse(States.EnumStates.LOADING, false, null));
+        }
+
+        mMqttClientUtilInstance.publish(data, new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken iMqttToken) {
+                Log.d(TAG, "onSuccess: Published data to Server");
+
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    mPublishMutableLiveData
+                            .setValue(new DataResponse(States.EnumStates.SUCCESS, true, null));
+                } else {
+                    mPublishMutableLiveData
+                            .postValue(new DataResponse(States.EnumStates.SUCCESS, true, null));
+                }
+            }
+
+            @Override
+            public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
+                Log.e(TAG, "onFailure: Could not publish data to Server");
+
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    mPublishMutableLiveData
+                            .setValue(new DataResponse(States.EnumStates.ERROR, false,
+                                    new Error("Could not publish data to Server")));
+                } else {
+                    mPublishMutableLiveData
+                            .postValue(new DataResponse(States.EnumStates.ERROR, false,
+                                    new Error("Could not publish data to Server")));
+                }
+            }
+        });
+    }
+
+    /**
+     * Get Live Data response from connectToBroker method
+     */
+    public LiveData<DataResponse> getConnectToBrokerLiveData() {
+        return mConnectBrokerMutableLiveData;
+    }
+
     /**
      * Get Live Data response from disconnectFromBroker method
      */
     public LiveData<DataResponse> getDisconnectFromBrokerLiveData() {
         return mDisconnectBrokerMutableLiveData;
+    }
+
+    /**
+     * Get Live Data response from publish method
+     */
+    public LiveData<DataResponse> getPublishLiveData() {
+        return mPublishMutableLiveData;
     }
 }
