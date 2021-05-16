@@ -6,8 +6,6 @@ public interface ConnectContract {
         void prepareDataForBrokerConnection();
         void onConnectButtonClicked();
         void onClearButtonClicked();
-        void displayProgressBar();
-        void hideProgressBar();
         void displayMessage(String message);
     }
 

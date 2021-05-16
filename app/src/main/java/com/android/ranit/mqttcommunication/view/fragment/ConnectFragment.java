@@ -180,17 +180,6 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
     }
 
     @Override
-    public void displayProgressBar() {
-        Log.d(TAG, "displayProgressBar() called");
-
-    }
-
-    @Override
-    public void hideProgressBar() {
-        Log.d(TAG, "hideProgressBar() called");
-    }
-
-    @Override
     public void displayMessage(String message) {
         Snackbar.make(mBinding.layoutParent, message, Snackbar.LENGTH_SHORT)
                 .show();
