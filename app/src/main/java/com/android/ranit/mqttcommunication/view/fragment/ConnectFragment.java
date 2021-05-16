@@ -20,6 +20,7 @@ import com.android.ranit.mqttcommunication.data.DataResponse;
 import com.android.ranit.mqttcommunication.data.States;
 import com.android.ranit.mqttcommunication.databinding.FragmentConnectBinding;
 import com.android.ranit.mqttcommunication.view.activity.MainActivity;
+import com.android.ranit.mqttcommunication.view.custom.CustomProgressbar;
 import com.android.ranit.mqttcommunication.viewModel.MqttClientViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -31,6 +32,7 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
     private FragmentConnectBinding mBinding;
     private MqttClientViewModel mViewModel;
     private MqttClientUtil mMqttClientUtilInstance;
+    private CustomProgressbar mProgressBar;
 
     private String mServerUri, mClientId, mUserName, mPassword;
 
@@ -49,14 +51,18 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
                         Log.d(TAG, "onChanged() called");
 
                         if (dataResponse.getState() == States.EnumStates.SUCCESS) {
+                            mProgressBar.dismiss();
                             // Launch Client Fragment
                             if (getActivity() != null) {
                                 ((MainActivity) getActivity()).launchClientFragment();
                             }
                         } else if (dataResponse.getState() == States.EnumStates.ERROR) {
                             Log.e(TAG, "observeConnectToBrokerLiveData: ERROR");
+                            mProgressBar.dismiss();
+                            displayMessage("Something went wrong! Try again.");
                         } else {
                             Log.e(TAG, "observeConnectToBrokerLiveData: LOADING");
+                            mProgressBar.show();
                         }
                     }
                 });
@@ -76,7 +82,6 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         if (getActivity() != null) {
             // Making MainActivity at the ViewModelStoreOwner
             mViewModel = new ViewModelProvider(getActivity()).get(MqttClientViewModel.class);
-
             observeConnectToBrokerLiveData();
         } else {
             Log.e(TAG, "ViewModel could not be initialized");
@@ -88,6 +93,8 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_connect, container, false);
+        mProgressBar = new CustomProgressbar(getContext());
+
         return mBinding.getRoot();
     }
 
@@ -143,9 +150,7 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
                     mViewModel.connectToMqttBroker(mServerUri, mClientId, mUserName, mPassword);
                 }
             } else {
-                Snackbar.make(mBinding.layoutParent, "Fill necessary data to proceed",
-                        Snackbar.LENGTH_SHORT)
-                        .show();
+                displayMessage("Fill all mandatory fields to proceed.");
             }
         });
     }
@@ -172,5 +177,22 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
                 mBinding.editTvPassword.getEditText().setText("");
             }
         });
+    }
+
+    @Override
+    public void displayProgressBar() {
+        Log.d(TAG, "displayProgressBar() called");
+
+    }
+
+    @Override
+    public void hideProgressBar() {
+        Log.d(TAG, "hideProgressBar() called");
+    }
+
+    @Override
+    public void displayMessage(String message) {
+        Snackbar.make(mBinding.layoutParent, message, Snackbar.LENGTH_SHORT)
+                .show();
     }
 }
