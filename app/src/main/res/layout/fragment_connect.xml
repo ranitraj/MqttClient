@@ -109,6 +109,62 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <View
+            android:id="@+id/viewUserHelp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0"
+            app:layout_constraintHeight_percent="0.2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTvPassword"
+            app:layout_constraintBottom_toTopOf="@id/buttonConnect"/>
+
+        <TextView
+            android:id="@+id/tvServerUriHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/server_uri_to_be_entered"
+            style="@style/TextView.Header.Large"
+            android:layout_marginStart="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/viewUserHelp"
+            app:layout_constraintTop_toTopOf="@+id/viewUserHelp" />
+
+        <TextView
+            android:id="@+id/tvServerUri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_32"
+            android:padding="@dimen/dp_4"
+            android:text="tcp://broker.hivemq.com:1883"
+            android:textIsSelectable="true"
+            style="@style/TextView.Header.Large.Red"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvServerUriHeader" />
+
+        <TextView
+            android:id="@+id/tvClientIdHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/generate_client_id"
+            style="@style/TextView.Header.Large"
+            android:layout_marginStart="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/viewUserHelp"
+            app:layout_constraintBottom_toTopOf="@id/buttonGenerateClientId" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonGenerateClientId"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.35"
+
+            android:text="@string/generate"
+            android:textSize="@dimen/sp_12"
+            android:layout_marginStart="@dimen/dp_60"
+            app:layout_constraintStart_toStartOf="@id/viewUserHelp"
+            app:layout_constraintBottom_toBottomOf="@id/viewUserHelp"
+            app:icon="@drawable/ic_identity"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"/>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonConnect"
             android:layout_width="@dimen/dp_0"

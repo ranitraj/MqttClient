@@ -6,6 +6,7 @@ public interface ConnectContract {
         void prepareDataForBrokerConnection();
         void onConnectButtonClicked();
         void onClearButtonClicked();
+        void onGenerateButtonClicked();
         void attachObserver();
         void displayMessage(String message);
     }

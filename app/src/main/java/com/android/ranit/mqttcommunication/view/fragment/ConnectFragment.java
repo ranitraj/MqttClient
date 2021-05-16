@@ -25,6 +25,7 @@ import com.android.ranit.mqttcommunication.view.custom.CustomProgressbar;
 import com.android.ranit.mqttcommunication.viewModel.MqttClientViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.jetbrains.annotations.NotNull;
 
 public class ConnectFragment extends Fragment implements ConnectContract.View {
@@ -94,6 +95,7 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_connect, container, false);
         mProgressBar = new CustomProgressbar(getContext());
 
+        onGenerateButtonClicked();
         onConnectButtonClicked();
         onClearButtonClicked();
 
@@ -171,6 +173,20 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
 
             if (mBinding.editTvPassword.getEditText() != null) {
                 mBinding.editTvPassword.getEditText().setText("");
+            }
+        });
+    }
+
+    @Override
+    public void onGenerateButtonClicked() {
+        mBinding.buttonGenerateClientId.setOnClickListener(view -> {
+            Log.d(TAG, "onGenerateButtonClicked() called");
+            mClientId = MqttClient.generateClientId();
+
+            // Set generated Client-ID to EditText
+            if (mBinding.editTvClientId.getEditText() != null) {
+                mBinding.editTvClientId.getEditText().setText("");
+                mBinding.editTvClientId.getEditText().setText(mClientId);
             }
         });
     }

@@ -15,15 +15,15 @@
     </style>
 
     <!-- Text View Style -->
-    <style name="TextView.Header.XLarge" parent="Widget.AppCompat.TextView">
-        <item name="android:textSize">@dimen/sp_24</item>
-        <item name="color">@color/headerText</item>
-        <item name="android:textStyle">bold</item>
+    <style name="TextView.Header.Large.Red" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/red_200</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
     <style name="TextView.Header.Large" parent="Widget.AppCompat.TextView">
         <item name="android:textSize">@dimen/sp_16</item>
-        <item name="color">@color/headerText</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/headerText</item>
+        <item name="android:textStyle">normal</item>
     </style>
 </resources>

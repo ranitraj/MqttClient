@@ -20,4 +20,7 @@
     <string name="retain_flag">Select Retain Flag</string>
     <string name="enable">Enable</string>
     <string name="disable">Disable</string>
+    <string name="server_uri_to_be_entered">Server URI to be entered:</string>
+    <string name="generate">Generate</string>
+    <string name="generate_client_id">Generate Client ID:</string>
 </resources>
