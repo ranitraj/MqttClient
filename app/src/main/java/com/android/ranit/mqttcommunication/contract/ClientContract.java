@@ -13,6 +13,7 @@ public interface ClientContract {
         void onDisconnectButtonClicked();
         void attachObservers();
         void displayMessage(String message);
+        void changeVisibility(android.view.View view, int visibility);
         void enableUiComponent(android.view.View componentName);
         void disableUiComponent(android.view.View componentName);
     }

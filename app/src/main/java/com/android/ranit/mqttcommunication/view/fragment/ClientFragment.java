@@ -98,8 +98,14 @@ public class ClientFragment extends Fragment implements ClientContract.View {
 
             if (dataResponse.getState() == States.EnumStates.SUCCESS) {
                 mProgressBar.hide();
+                // Enable un-subscribe button and disable subscribe button
                 enableUiComponent(mBinding.buttonUnSubscribe);
                 disableUiComponent(mBinding.buttonSubscribe);
+
+                // Change visibility for QoS-Level Header and Slider
+                changeVisibility(mBinding.tvQosLevelSubHeader1, View.INVISIBLE);
+                changeVisibility(mBinding.sliderSubscribeQosLevel, View.INVISIBLE);
+
                 displayMessage("Subscribed Data to broker successfully.");
             } else if (dataResponse.getState() == States.EnumStates.ERROR) {
                 mProgressBar.dismiss();
@@ -256,6 +262,11 @@ public class ClientFragment extends Fragment implements ClientContract.View {
     public void displayMessage(String message) {
         Snackbar.make(mBinding.layoutParent, message, Snackbar.LENGTH_SHORT)
                 .show();
+    }
+
+    @Override
+    public void changeVisibility(View view, int visibility) {
+        view.setVisibility(visibility);
     }
 
     @Override
