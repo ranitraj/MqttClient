@@ -13,6 +13,7 @@ import com.android.ranit.mqttcommunication.common.MqttClientUtil;
 import com.android.ranit.mqttcommunication.contract.ClientContract;
 import com.android.ranit.mqttcommunication.contract.ConnectContract;
 import com.android.ranit.mqttcommunication.data.request.PublishPojo;
+import com.android.ranit.mqttcommunication.data.request.SubscribePojo;
 import com.android.ranit.mqttcommunication.data.response.DataResponse;
 import com.android.ranit.mqttcommunication.data.response.Error;
 import com.android.ranit.mqttcommunication.data.response.States;
@@ -30,6 +31,7 @@ public class MqttClientViewModel extends AndroidViewModel
     private final MutableLiveData<DataResponse> mConnectBrokerMutableLiveData;
     private final MutableLiveData<DataResponse> mDisconnectBrokerMutableLiveData;
     private final MutableLiveData<DataResponse> mPublishMutableLiveData;
+    private final MutableLiveData<DataResponse> mSubscribeToTopicMutableLiveData;
 
     // Constructor
     public MqttClientViewModel(@NonNull @NotNull Application application) {
@@ -40,6 +42,7 @@ public class MqttClientViewModel extends AndroidViewModel
         mConnectBrokerMutableLiveData = new MutableLiveData<>();
         mDisconnectBrokerMutableLiveData = new MutableLiveData<>();
         mPublishMutableLiveData = new MutableLiveData<>();
+        mSubscribeToTopicMutableLiveData = new MutableLiveData<>();
     }
 
     @Override
@@ -149,7 +152,7 @@ public class MqttClientViewModel extends AndroidViewModel
         mMqttClientUtilInstance.publish(data, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
-                Log.d(TAG, "onSuccess: Published data to Server");
+                Log.d(TAG, "onSuccess: Published data to Broker");
 
                 if (Looper.myLooper() == Looper.getMainLooper()) {
                     mPublishMutableLiveData
@@ -162,16 +165,60 @@ public class MqttClientViewModel extends AndroidViewModel
 
             @Override
             public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                Log.e(TAG, "onFailure: Could not publish data to Server");
+                Log.e(TAG, "onFailure: Could not publish data to Broker");
 
                 if (Looper.myLooper() == Looper.getMainLooper()) {
                     mPublishMutableLiveData
                             .setValue(new DataResponse(States.EnumStates.ERROR, false,
-                                    new Error("Could not publish data to Server")));
+                                    new Error("Could not publish data to Broker")));
                 } else {
                     mPublishMutableLiveData
                             .postValue(new DataResponse(States.EnumStates.ERROR, false,
-                                    new Error("Could not publish data to Server")));
+                                    new Error("Could not publish data to Broker")));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void subscribeToTopic(SubscribePojo data) {
+        Log.d(TAG, "subscribeToTopic() called");
+
+        // Initially, Setting Status as LOADING
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            mSubscribeToTopicMutableLiveData
+                    .setValue(new DataResponse(States.EnumStates.LOADING, false, null));
+        } else {
+            mSubscribeToTopicMutableLiveData
+                    .postValue(new DataResponse(States.EnumStates.LOADING, false, null));
+        }
+
+        mMqttClientUtilInstance.subscribe(data, new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken iMqttToken) {
+                Log.d(TAG, "onSuccess: Subscribed to topic via Broker");
+
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    mSubscribeToTopicMutableLiveData
+                            .setValue(new DataResponse(States.EnumStates.SUCCESS, true, null));
+                } else {
+                    mSubscribeToTopicMutableLiveData
+                            .postValue(new DataResponse(States.EnumStates.SUCCESS, true, null));
+                }
+            }
+
+            @Override
+            public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
+                Log.e(TAG, "onFailure: Could not to topic via Broker");
+
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    mSubscribeToTopicMutableLiveData
+                            .setValue(new DataResponse(States.EnumStates.ERROR, false,
+                                    new Error("Could not subscribe to topic via Broker")));
+                } else {
+                    mSubscribeToTopicMutableLiveData
+                            .postValue(new DataResponse(States.EnumStates.ERROR, false,
+                                    new Error("Could not subscribe to topic via Broker")));
                 }
             }
         });
@@ -196,5 +243,12 @@ public class MqttClientViewModel extends AndroidViewModel
      */
     public LiveData<DataResponse> getPublishLiveData() {
         return mPublishMutableLiveData;
+    }
+
+    /**
+     * Get Live Data response from subscribe method
+     */
+    public LiveData<DataResponse> getSubscribeToTopicLiveData() {
+        return mSubscribeToTopicMutableLiveData;
     }
 }

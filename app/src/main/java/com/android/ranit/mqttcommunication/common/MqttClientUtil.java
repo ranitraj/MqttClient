@@ -4,10 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.android.ranit.mqttcommunication.data.request.PublishPojo;
+import com.android.ranit.mqttcommunication.data.request.SubscribePojo;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -95,6 +95,20 @@ public class MqttClientUtil {
                             data.isRetainFlag() + "]");
 
             mMqttClient.publish(data.getTopic(), message, null, listener);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Subscribe to an MQTT Topic (through Broker)
+     */
+    public void subscribe(SubscribePojo data, IMqttActionListener listener) {
+        try {
+            Log.d(TAG, "subscribe: Subscribing to broker with Topic = [" +data.getTopic()+ "], " +
+                    " QoS Level = [" + data.getQosLevel() + "]");
+
+            mMqttClient.subscribe(data.getTopic(), data.getQosLevel(), null, listener);
         } catch (MqttException e) {
             e.printStackTrace();
         }

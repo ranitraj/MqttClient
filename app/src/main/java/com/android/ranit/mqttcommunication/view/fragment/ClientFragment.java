@@ -18,6 +18,7 @@ import com.android.ranit.mqttcommunication.R;
 import com.android.ranit.mqttcommunication.common.InputValidation;
 import com.android.ranit.mqttcommunication.contract.ClientContract;
 import com.android.ranit.mqttcommunication.data.request.PublishPojo;
+import com.android.ranit.mqttcommunication.data.request.SubscribePojo;
 import com.android.ranit.mqttcommunication.data.response.DataResponse;
 import com.android.ranit.mqttcommunication.data.response.States;
 import com.android.ranit.mqttcommunication.databinding.FragmentClientBinding;
@@ -39,7 +40,7 @@ public class ClientFragment extends Fragment implements ClientContract.View {
 
     private String mPublishTopic, mPublishPayload, mSubscribeTopic;
     private int mPublishQosLevel, mSubscribeQosLevel;
-    private boolean mRetentionFlag = true;
+    private boolean mRetentionFlag;
 
     public ClientFragment() {
         // Required empty public constructor
@@ -60,7 +61,7 @@ public class ClientFragment extends Fragment implements ClientContract.View {
                 }
             } else if (dataResponse.getState() == States.EnumStates.ERROR) {
                 mProgressBar.dismiss();
-                displayMessage("Something went wrong! Try again.");
+                displayMessage(dataResponse.getErrorObject().getErrorMessage());
             } else {
                 mProgressBar.show();
             }
@@ -80,7 +81,29 @@ public class ClientFragment extends Fragment implements ClientContract.View {
                 displayMessage("Published Data to broker successfully.");
             } else if (dataResponse.getState() == States.EnumStates.ERROR) {
                 mProgressBar.dismiss();
-                displayMessage("Something went wrong! Try again.");
+                displayMessage(dataResponse.getErrorObject().getErrorMessage());
+            } else {
+                mProgressBar.show();
+            }
+        }
+    };
+
+    /**
+     * Observer for subscribeToTopic Live Data
+     */
+    private final Observer<DataResponse> observerSubscribeToTopic = new Observer<DataResponse>() {
+        @Override
+        public void onChanged(DataResponse dataResponse) {
+            Log.d(TAG, "onChanged() called");
+
+            if (dataResponse.getState() == States.EnumStates.SUCCESS) {
+                mProgressBar.hide();
+                enableUiComponent(mBinding.buttonUnSubscribe);
+                disableUiComponent(mBinding.buttonSubscribe);
+                displayMessage("Subscribed Data to broker successfully.");
+            } else if (dataResponse.getState() == States.EnumStates.ERROR) {
+                mProgressBar.dismiss();
+                displayMessage(dataResponse.getErrorObject().getErrorMessage());
             } else {
                 mProgressBar.show();
             }
@@ -101,6 +124,7 @@ public class ClientFragment extends Fragment implements ClientContract.View {
 
         onDisconnectButtonClicked();
         onPublishButtonClicked();
+        onSubscribeButtonClicked();
 
         return mBinding.getRoot();
     }
@@ -128,6 +152,8 @@ public class ClientFragment extends Fragment implements ClientContract.View {
     public void onDestroy() {
         super.onDestroy();
         mViewModel.getDisconnectFromBrokerLiveData().removeObservers(this);
+        mViewModel.getPublishLiveData().removeObservers(this);
+        mViewModel.getSubscribeToTopicLiveData().removeObservers(this);
     }
 
     @Override
@@ -163,6 +189,19 @@ public class ClientFragment extends Fragment implements ClientContract.View {
     }
 
     @Override
+    public void prepareDataForSubscribing() {
+        Log.d(TAG, "prepareDataForSubscribing() called");
+
+        // Get Subscription topic
+        if (mBinding.editTvSubscribeTopic.getEditText() != null) {
+            mSubscribeTopic = mBinding.editTvSubscribeTopic.getEditText().getText().toString();
+        }
+
+        // Get Subscription QoS Level
+        mSubscribeQosLevel = (int) mBinding.sliderSubscribeQosLevel.getValue();
+    }
+
+    @Override
     public void onPublishButtonClicked() {
         mBinding.buttonPublish.setOnClickListener(view -> {
             Log.d(TAG, "onPublishButtonClicked called()");
@@ -173,6 +212,20 @@ public class ClientFragment extends Fragment implements ClientContract.View {
             } else {
                 mViewModel.publishDataToMqttBroker(new PublishPojo(mPublishTopic, mPublishPayload,
                         mPublishQosLevel, mRetentionFlag));
+            }
+        });
+    }
+
+    @Override
+    public void onSubscribeButtonClicked() {
+        mBinding.buttonSubscribe.setOnClickListener(view -> {
+            Log.d(TAG, "onSubscribeButtonClicked() called");
+            prepareDataForSubscribing();
+
+            if (InputValidation.isEmpty(mSubscribeTopic)) {
+                displayMessage("Enter Topic before subscribing.");
+            } else {
+                mViewModel.subscribeToTopic(new SubscribePojo(mSubscribeTopic, mSubscribeQosLevel));
             }
         });
     }
@@ -194,6 +247,9 @@ public class ClientFragment extends Fragment implements ClientContract.View {
 
         mViewModel.getPublishLiveData()
                 .observe(getViewLifecycleOwner(), observerPublish);
+
+        mViewModel.getSubscribeToTopicLiveData()
+                .observe(getViewLifecycleOwner(), observerSubscribeToTopic);
     }
 
     @Override

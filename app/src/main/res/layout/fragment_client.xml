@@ -103,8 +103,9 @@
             android:id="@+id/toggleGroupRetainFlag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:checkedButton="@id/buttonEnable"
+            app:checkedButton="@id/buttonDisable"
             app:singleSelection="true"
+            app:selectionRequired="true"
             app:layout_constraintTop_toBottomOf="@id/tvRetainFlagSubHeader"
             app:layout_constraintEnd_toEndOf="parent">
 
