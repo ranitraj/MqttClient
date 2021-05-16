@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -15,7 +16,10 @@ import android.view.ViewGroup;
 import com.android.ranit.mqttcommunication.R;
 import com.android.ranit.mqttcommunication.common.MqttClientUtil;
 import com.android.ranit.mqttcommunication.contract.ConnectContract;
+import com.android.ranit.mqttcommunication.data.DataResponse;
+import com.android.ranit.mqttcommunication.data.States;
 import com.android.ranit.mqttcommunication.databinding.FragmentConnectBinding;
+import com.android.ranit.mqttcommunication.view.activity.MainActivity;
 import com.android.ranit.mqttcommunication.viewModel.MqttClientViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -34,6 +38,30 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         // Required empty public constructor
     }
 
+    /**
+     * Observer for connectToBroker LiveData Response
+     */
+    private void observeConnectToBrokerLiveData() {
+        mViewModel.getConnectToBrokerLiveData().observe(getViewLifecycleOwner(),
+                new Observer<DataResponse>() {
+                    @Override
+                    public void onChanged(DataResponse dataResponse) {
+                        Log.d(TAG, "onChanged() called");
+
+                        if (dataResponse.getState() == States.EnumStates.SUCCESS) {
+                            // Launch Client Fragment
+                            if (getActivity() != null) {
+                                ((MainActivity) getActivity()).launchClientFragment();
+                            }
+                        } else if (dataResponse.getState() == States.EnumStates.ERROR) {
+                            Log.e(TAG, "observeConnectToBrokerLiveData: ERROR");
+                        } else {
+                            Log.e(TAG, "observeConnectToBrokerLiveData: LOADING");
+                        }
+                    }
+                });
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +76,8 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         if (getActivity() != null) {
             // Making MainActivity at the ViewModelStoreOwner
             mViewModel = new ViewModelProvider(getActivity()).get(MqttClientViewModel.class);
+
+            observeConnectToBrokerLiveData();
         } else {
             Log.e(TAG, "ViewModel could not be initialized");
         }
@@ -66,6 +96,12 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         super.onResume();
         onConnectButtonClicked();
         onClearButtonClicked();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mViewModel.getConnectToBrokerLiveData().removeObservers(this);
     }
 
     @Override
