@@ -10,6 +10,8 @@ public interface ClientContract {
         void onDisconnectButtonClicked();
         void attachObservers();
         void displayMessage(String message);
+        void enableUiComponent(android.view.View componentName);
+        void disableUiComponent(android.view.View componentName);
     }
 
     // View-Model

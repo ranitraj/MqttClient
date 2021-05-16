@@ -2,6 +2,7 @@ package com.android.ranit.mqttcommunication.view.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,8 @@ import com.android.ranit.mqttcommunication.view.custom.CustomProgressbar;
 import com.android.ranit.mqttcommunication.viewModel.MqttClientViewModel;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ClientFragment extends Fragment implements ClientContract.View {
     public static final String TAG = ClientFragment.class.getSimpleName();
@@ -100,6 +103,13 @@ public class ClientFragment extends Fragment implements ClientContract.View {
         onPublishButtonClicked();
 
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        disableUiComponent(mBinding.buttonUnSubscribe);
     }
 
     @Override
@@ -190,5 +200,17 @@ public class ClientFragment extends Fragment implements ClientContract.View {
     public void displayMessage(String message) {
         Snackbar.make(mBinding.layoutParent, message, Snackbar.LENGTH_SHORT)
                 .show();
+    }
+
+    @Override
+    public void enableUiComponent(View componentName) {
+        componentName.setEnabled(true);
+        componentName.setAlpha(1);
+    }
+
+    @Override
+    public void disableUiComponent(View componentName) {
+        componentName.setEnabled(false);
+        componentName.setAlpha((float) 0.8);
     }
 }
