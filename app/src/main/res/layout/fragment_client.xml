@@ -1,5 +1,6 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutParent"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -149,7 +150,7 @@
             android:layout_height="wrap_content"
             android:text="@string/subscribe_to_mqtt_broker"
             style="@style/TextView.Header.Large"
-            android:layout_marginTop="@dimen/dp_60"
+            android:layout_marginTop="@dimen/dp_72"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/buttonPublish" />
 
@@ -239,6 +240,7 @@
             app:layout_constraintWidth_percent="0.5"
 
             android:text="@string/disconnect"
+            android:layout_marginBottom="@dimen/dp_8"
             android:paddingStart="@dimen/dp_16"
             android:paddingEnd="@dimen/dp_16"
             android:paddingTop="@dimen/dp_8"
@@ -246,26 +248,8 @@
             android:textSize="@dimen/sp_16"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/buttonClearTextFields"
-            app:icon="@drawable/ic_disconnect"
-            style="@style/Widget.MaterialComponents.Button.Icon"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonClearTextFields"
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="wrap_content"
-            app:layout_constraintWidth_percent="0.5"
-
-            android:text="@string/clear"
-            android:paddingStart="@dimen/dp_32"
-            android:paddingEnd="@dimen/dp_32"
-            android:paddingTop="@dimen/dp_8"
-            android:paddingBottom="@dimen/dp_8"
-            android:textSize="@dimen/sp_16"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:icon="@drawable/ic_clear"
+            app:icon="@drawable/ic_disconnect"
             style="@style/Widget.MaterialComponents.Button.Icon"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

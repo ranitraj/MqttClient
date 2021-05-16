@@ -43,30 +43,29 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
     /**
      * Observer for connectToBroker LiveData Response
      */
-    private void observeConnectToBrokerLiveData() {
-        mViewModel.getConnectToBrokerLiveData().observe(getViewLifecycleOwner(),
-                new Observer<DataResponse>() {
-                    @Override
-                    public void onChanged(DataResponse dataResponse) {
-                        Log.d(TAG, "onChanged() called");
+    private final Observer<DataResponse> observerConnectToBroker = new Observer<DataResponse>() {
+        @Override
+        public void onChanged(DataResponse dataResponse) {
+            Log.d(TAG, "onChanged() called");
 
-                        if (dataResponse.getState() == States.EnumStates.SUCCESS) {
-                            mProgressBar.dismiss();
-                            // Launch Client Fragment
-                            if (getActivity() != null) {
-                                ((MainActivity) getActivity()).launchClientFragment();
-                            }
-                        } else if (dataResponse.getState() == States.EnumStates.ERROR) {
-                            Log.e(TAG, "observeConnectToBrokerLiveData: ERROR");
-                            mProgressBar.dismiss();
-                            displayMessage("Something went wrong! Try again.");
-                        } else {
-                            Log.e(TAG, "observeConnectToBrokerLiveData: LOADING");
-                            mProgressBar.show();
-                        }
-                    }
-                });
-    }
+            if (dataResponse.getState() == States.EnumStates.SUCCESS) {
+                mProgressBar.dismiss();
+                // Launch Client Fragment
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).launchClientFragment();
+                }
+                mViewModel.getConnectToBrokerLiveData().removeObserver(this);
+
+            } else if (dataResponse.getState() == States.EnumStates.ERROR) {
+                mProgressBar.dismiss();
+                displayMessage("Something went wrong! Try again.");
+
+                mViewModel.getConnectToBrokerLiveData().removeObserver(this);
+            } else {
+                mProgressBar.show();
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +81,6 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         if (getActivity() != null) {
             // Making MainActivity at the ViewModelStoreOwner
             mViewModel = new ViewModelProvider(getActivity()).get(MqttClientViewModel.class);
-            observeConnectToBrokerLiveData();
         } else {
             Log.e(TAG, "ViewModel could not be initialized");
         }
@@ -95,14 +93,10 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_connect, container, false);
         mProgressBar = new CustomProgressbar(getContext());
 
-        return mBinding.getRoot();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         onConnectButtonClicked();
         onClearButtonClicked();
+
+        return mBinding.getRoot();
     }
 
     @Override
@@ -137,9 +131,14 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
 
     @Override
     public void onConnectButtonClicked() {
-        Log.d(TAG, "onConnectButtonClicked() called");
         // Click Listener
         mBinding.buttonConnect.setOnClickListener(view -> {
+            Log.d(TAG, "onConnectButtonClicked() called");
+
+            // Attach Observer
+            mViewModel.getConnectToBrokerLiveData()
+                    .observe(getViewLifecycleOwner(), observerConnectToBroker);
+
             prepareDataForBrokerConnection();
 
             if (!mServerUri.equals("") && !mClientId.equals("")) {
@@ -157,9 +156,9 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
 
     @Override
     public void onClearButtonClicked() {
-        Log.d(TAG, "onClearButtonClicked() called");
         // Click Listener
         mBinding.buttonClearTextFields.setOnClickListener(view -> {
+            Log.d(TAG, "onClearButtonClicked() called");
 
             if (mBinding.editTvServerUri.getEditText() != null) {
                 mBinding.editTvServerUri.getEditText().setText("");

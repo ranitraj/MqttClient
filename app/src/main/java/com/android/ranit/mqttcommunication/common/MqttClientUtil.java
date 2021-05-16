@@ -50,10 +50,8 @@ public class MqttClientUtil {
      * Connect to MQTT Broker
      */
     public void connectToBroker(String userName, String password,
-                                IMqttActionListener listener, MqttCallback callback) {
+                                IMqttActionListener listener) {
         Log.d(TAG, "connectToBroker() called");
-
-        mMqttClient.setCallback(callback);
 
         MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(userName);
@@ -63,7 +61,19 @@ public class MqttClientUtil {
             Log.d(TAG, "connectToBroker Connecting..");
             mMqttClient.connect(options, null, listener);
         } catch (MqttException e) {
-            Log.e(TAG, "connectToBroker Exception: "+e.toString() );
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Disconnect From MQTT Broker
+     */
+    public void disconnectFromBroker(IMqttActionListener listener) {
+        try {
+            Log.d(TAG, "disconnectFromBroker Disconnecting..");
+            mMqttClient.disconnect(null, listener);
+        } catch (MqttException e) {
+            e.printStackTrace();
         }
     }
 }

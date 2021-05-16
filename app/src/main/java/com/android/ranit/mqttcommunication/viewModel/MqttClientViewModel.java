@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.ranit.mqttcommunication.common.MqttClientUtil;
+import com.android.ranit.mqttcommunication.contract.ClientContract;
 import com.android.ranit.mqttcommunication.contract.ConnectContract;
 import com.android.ranit.mqttcommunication.data.DataResponse;
 import com.android.ranit.mqttcommunication.data.Error;
@@ -22,12 +23,14 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.jetbrains.annotations.NotNull;
 
-public class MqttClientViewModel extends AndroidViewModel implements ConnectContract.ViewModel {
+public class MqttClientViewModel extends AndroidViewModel
+        implements ConnectContract.ViewModel, ClientContract.ViewModel {
     private static final String TAG = MqttClientViewModel.class.getSimpleName();
 
     private final MqttClientUtil mMqttClientUtilInstance;
 
-    private MutableLiveData<DataResponse> mConnectBrokerMutableLiveData;
+    private final MutableLiveData<DataResponse> mConnectBrokerMutableLiveData;
+    private final MutableLiveData<DataResponse> mDisconnectBrokerMutableLiveData;
 
     // Constructor
     public MqttClientViewModel(@NonNull @NotNull Application application) {
@@ -36,6 +39,7 @@ public class MqttClientViewModel extends AndroidViewModel implements ConnectCont
         mMqttClientUtilInstance = MqttClientUtil.getInstance();
 
         mConnectBrokerMutableLiveData = new MutableLiveData<>();
+        mDisconnectBrokerMutableLiveData = new MutableLiveData<>();
     }
 
     @Override
@@ -82,24 +86,6 @@ public class MqttClientViewModel extends AndroidViewModel implements ConnectCont
                                             new Error("Could not connect to Broker")));
                         }
                     }
-                },
-                
-                new MqttCallback() {
-                    @Override
-                    public void connectionLost(Throwable throwable) {
-                        Log.e(TAG, "connectionLost: Could not connect due to "+throwable.toString());
-                    }
-
-                    @Override
-                    public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-                        String message = "Received message: "+mqttMessage.toString()+" from topic: "+topic;
-                        Log.d(TAG, message);
-                    }
-
-                    @Override
-                    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-                        Log.d(TAG, "deliveryComplete: ");
-                    }
                 });
     }
 
@@ -108,5 +94,56 @@ public class MqttClientViewModel extends AndroidViewModel implements ConnectCont
      */
     public LiveData<DataResponse> getConnectToBrokerLiveData() {
         return mConnectBrokerMutableLiveData;
+    }
+
+    @Override
+    public void disconnectFromMqttBroker() {
+        Log.d(TAG, "disconnectFromMqttBroker() called");
+
+        // Initially, Setting Status as LOADING
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            mDisconnectBrokerMutableLiveData
+                    .setValue(new DataResponse(States.EnumStates.LOADING, false, null));
+        } else {
+            mDisconnectBrokerMutableLiveData
+                    .postValue(new DataResponse(States.EnumStates.LOADING, false, null));
+        }
+
+        mMqttClientUtilInstance.disconnectFromBroker(new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken iMqttToken) {
+                Log.d(TAG, "onSuccess: Disconnected from Broker");
+
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    mDisconnectBrokerMutableLiveData
+                            .setValue(new DataResponse(States.EnumStates.SUCCESS, true, null));
+                } else {
+                    mDisconnectBrokerMutableLiveData
+                            .postValue(new DataResponse(States.EnumStates.SUCCESS, true, null));
+                }
+            }
+
+            @Override
+            public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
+                Log.e(TAG, "onFailure: Could not disconnect from Broker");
+
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    mDisconnectBrokerMutableLiveData
+                            .setValue(new DataResponse(States.EnumStates.ERROR, false,
+                                    new Error("Could not disconnect from Broker")));
+                } else {
+                    mDisconnectBrokerMutableLiveData
+                            .postValue(new DataResponse(States.EnumStates.ERROR, false,
+                                    new Error("Could not disconnect from Broker")));
+                }
+            }
+        });
+    }
+
+    /**
+     * Get Live Data response from disconnectFromBroker method
+     */
+    public LiveData<DataResponse> getDisconnectFromBrokerLiveData() {
+        return mDisconnectBrokerMutableLiveData;
     }
 }
