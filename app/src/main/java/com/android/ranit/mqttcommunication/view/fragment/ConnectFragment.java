@@ -79,8 +79,7 @@ public class ConnectFragment extends Fragment implements ConnectContract.View {
         super.onActivityCreated(savedInstanceState);
 
         if (getActivity() != null) {
-            // Making MainActivity at the ViewModelStoreOwner
-            mViewModel = new ViewModelProvider(getActivity()).get(MqttClientViewModel.class);
+            mViewModel = new ViewModelProvider(this).get(MqttClientViewModel.class);
         } else {
             Log.e(TAG, "ViewModel could not be initialized");
         }
