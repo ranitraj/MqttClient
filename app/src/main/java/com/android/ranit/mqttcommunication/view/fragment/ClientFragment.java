@@ -14,10 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.ranit.mqttcommunication.R;
-import com.android.ranit.mqttcommunication.common.MqttClientUtil;
 import com.android.ranit.mqttcommunication.contract.ClientContract;
-import com.android.ranit.mqttcommunication.data.DataResponse;
-import com.android.ranit.mqttcommunication.data.States;
+import com.android.ranit.mqttcommunication.data.response.DataResponse;
+import com.android.ranit.mqttcommunication.data.response.States;
 import com.android.ranit.mqttcommunication.databinding.FragmentClientBinding;
 import com.android.ranit.mqttcommunication.view.activity.MainActivity;
 import com.android.ranit.mqttcommunication.view.custom.CustomProgressbar;

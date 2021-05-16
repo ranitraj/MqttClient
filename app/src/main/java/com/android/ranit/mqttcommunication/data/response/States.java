@@ -1,4 +1,4 @@
-package com.android.ranit.mqttcommunication.data;
+package com.android.ranit.mqttcommunication.data.response;
 
 /**
  * Application states to denote the current status of application

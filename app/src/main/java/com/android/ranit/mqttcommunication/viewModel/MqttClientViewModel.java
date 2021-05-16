@@ -12,15 +12,12 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.ranit.mqttcommunication.common.MqttClientUtil;
 import com.android.ranit.mqttcommunication.contract.ClientContract;
 import com.android.ranit.mqttcommunication.contract.ConnectContract;
-import com.android.ranit.mqttcommunication.data.DataResponse;
-import com.android.ranit.mqttcommunication.data.Error;
-import com.android.ranit.mqttcommunication.data.States;
+import com.android.ranit.mqttcommunication.data.response.DataResponse;
+import com.android.ranit.mqttcommunication.data.response.Error;
+import com.android.ranit.mqttcommunication.data.response.States;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.jetbrains.annotations.NotNull;
 
 public class MqttClientViewModel extends AndroidViewModel

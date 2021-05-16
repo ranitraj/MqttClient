@@ -1,4 +1,4 @@
-package com.android.ranit.mqttcommunication.data;
+package com.android.ranit.mqttcommunication.data.response;
 
 /**
  * Custom error class which can be fully customized

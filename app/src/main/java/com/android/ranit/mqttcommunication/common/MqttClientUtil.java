@@ -76,4 +76,9 @@ public class MqttClientUtil {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Publish Message to MQTT Broker
+     */
+
 }

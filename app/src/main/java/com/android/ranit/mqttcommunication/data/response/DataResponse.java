@@ -1,4 +1,4 @@
-package com.android.ranit.mqttcommunication.data;
+package com.android.ranit.mqttcommunication.data.response;
 
 /**
  * Data Response object to be returned
