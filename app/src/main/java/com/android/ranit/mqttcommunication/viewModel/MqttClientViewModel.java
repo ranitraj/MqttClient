@@ -32,6 +32,7 @@ public class MqttClientViewModel extends AndroidViewModel
     private final MutableLiveData<DataResponse> mDisconnectBrokerMutableLiveData;
     private final MutableLiveData<DataResponse> mPublishMutableLiveData;
     private final MutableLiveData<DataResponse> mSubscribeToTopicMutableLiveData;
+    private final MutableLiveData<DataResponse> mUnSubscribeFromTopicMutableLiveData;
 
     // Constructor
     public MqttClientViewModel(@NonNull @NotNull Application application) {
@@ -43,6 +44,7 @@ public class MqttClientViewModel extends AndroidViewModel
         mDisconnectBrokerMutableLiveData = new MutableLiveData<>();
         mPublishMutableLiveData = new MutableLiveData<>();
         mSubscribeToTopicMutableLiveData = new MutableLiveData<>();
+        mUnSubscribeFromTopicMutableLiveData = new MutableLiveData<>();
     }
 
     @Override
@@ -209,7 +211,7 @@ public class MqttClientViewModel extends AndroidViewModel
 
             @Override
             public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                Log.e(TAG, "onFailure: Could not to topic via Broker");
+                Log.e(TAG, "onFailure: Could not subscribe to topic via Broker");
 
                 if (Looper.myLooper() == Looper.getMainLooper()) {
                     mSubscribeToTopicMutableLiveData
@@ -219,6 +221,50 @@ public class MqttClientViewModel extends AndroidViewModel
                     mSubscribeToTopicMutableLiveData
                             .postValue(new DataResponse(States.EnumStates.ERROR, false,
                                     new Error("Could not subscribe to topic via Broker")));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void unSubscribeFromTopic(String topicName) {
+        Log.d(TAG, "unSubscribeFromTopic() called");
+
+        // Initially, Setting Status as LOADING
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            mUnSubscribeFromTopicMutableLiveData
+                    .setValue(new DataResponse(States.EnumStates.LOADING, false, null));
+        } else {
+            mUnSubscribeFromTopicMutableLiveData
+                    .postValue(new DataResponse(States.EnumStates.LOADING, false, null));
+        }
+
+        mMqttClientUtilInstance.unSubscribe(topicName, new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken iMqttToken) {
+                Log.d(TAG, "onSuccess: Un-Subscribed from topic via Broker");
+
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    mUnSubscribeFromTopicMutableLiveData
+                            .setValue(new DataResponse(States.EnumStates.SUCCESS, true, null));
+                } else {
+                    mUnSubscribeFromTopicMutableLiveData
+                            .postValue(new DataResponse(States.EnumStates.SUCCESS, true, null));
+                }
+            }
+
+            @Override
+            public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
+                Log.e(TAG, "onFailure: Could not un-subscribe from topic via Broker");
+
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    mUnSubscribeFromTopicMutableLiveData
+                            .setValue(new DataResponse(States.EnumStates.ERROR, false,
+                                    new Error("Could not un-subscribe from topic")));
+                } else {
+                    mUnSubscribeFromTopicMutableLiveData
+                            .postValue(new DataResponse(States.EnumStates.ERROR, false,
+                                    new Error("Could not un-subscribe from topic")));
                 }
             }
         });
@@ -250,5 +296,12 @@ public class MqttClientViewModel extends AndroidViewModel
      */
     public LiveData<DataResponse> getSubscribeToTopicLiveData() {
         return mSubscribeToTopicMutableLiveData;
+    }
+
+    /**
+     * Get Live Data response from unSubscribe method
+     */
+    public LiveData<DataResponse> getUnSubscribeFromTopicLiveData() {
+        return mUnSubscribeFromTopicMutableLiveData;
     }
 }

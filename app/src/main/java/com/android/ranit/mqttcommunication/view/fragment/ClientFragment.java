@@ -38,7 +38,7 @@ public class ClientFragment extends Fragment implements ClientContract.View {
     private MqttClientViewModel mViewModel;
     private CustomProgressbar mProgressBar;
 
-    private String mPublishTopic, mPublishPayload, mSubscribeTopic;
+    private String mPublishTopic, mPublishPayload, mSubscribeTopic, mUnSubscribeTopic;
     private int mPublishQosLevel, mSubscribeQosLevel;
     private boolean mRetentionFlag;
 
@@ -106,7 +106,35 @@ public class ClientFragment extends Fragment implements ClientContract.View {
                 changeVisibility(mBinding.tvQosLevelSubHeader1, View.INVISIBLE);
                 changeVisibility(mBinding.sliderSubscribeQosLevel, View.INVISIBLE);
 
-                displayMessage("Subscribed Data to broker successfully.");
+                displayMessage("Subscribed to topic successfully.");
+            } else if (dataResponse.getState() == States.EnumStates.ERROR) {
+                mProgressBar.dismiss();
+                displayMessage(dataResponse.getErrorObject().getErrorMessage());
+            } else {
+                mProgressBar.show();
+            }
+        }
+    };
+
+    /**
+     * Observer for unSubscribeFromTopic LiveData
+     */
+    private final Observer<DataResponse> observerUnSubscribeFromTopic = new Observer<DataResponse>() {
+        @Override
+        public void onChanged(DataResponse dataResponse) {
+            Log.d(TAG, "onChanged() called");
+
+            if (dataResponse.getState() == States.EnumStates.SUCCESS) {
+                mProgressBar.hide();
+                // Enable subscribe button and disable un-subscribe button
+                enableUiComponent(mBinding.buttonSubscribe);
+                disableUiComponent(mBinding.buttonUnSubscribe);
+
+                // Change visibility for QoS-Level Header and Slider
+                changeVisibility(mBinding.tvQosLevelSubHeader1, View.VISIBLE);
+                changeVisibility(mBinding.sliderSubscribeQosLevel, View.VISIBLE);
+
+                displayMessage("Unsubscribed from topic successfully.");
             } else if (dataResponse.getState() == States.EnumStates.ERROR) {
                 mProgressBar.dismiss();
                 displayMessage(dataResponse.getErrorObject().getErrorMessage());
@@ -131,6 +159,7 @@ public class ClientFragment extends Fragment implements ClientContract.View {
         onDisconnectButtonClicked();
         onPublishButtonClicked();
         onSubscribeButtonClicked();
+        onUnSubscribeButtonClicked();
 
         return mBinding.getRoot();
     }
@@ -160,6 +189,7 @@ public class ClientFragment extends Fragment implements ClientContract.View {
         mViewModel.getDisconnectFromBrokerLiveData().removeObservers(this);
         mViewModel.getPublishLiveData().removeObservers(this);
         mViewModel.getSubscribeToTopicLiveData().removeObservers(this);
+        mViewModel.getUnSubscribeFromTopicLiveData().removeObservers(this);
     }
 
     @Override
@@ -208,6 +238,16 @@ public class ClientFragment extends Fragment implements ClientContract.View {
     }
 
     @Override
+    public void prepareDataForUnSubscribing() {
+        Log.d(TAG, "prepareDataForUnSubscribing() called");
+
+        // Get Un-Subscription topic
+        if (mBinding.editTvSubscribeTopic.getEditText() != null) {
+            mUnSubscribeTopic = mBinding.editTvSubscribeTopic.getEditText().getText().toString();
+        }
+    }
+
+    @Override
     public void onPublishButtonClicked() {
         mBinding.buttonPublish.setOnClickListener(view -> {
             Log.d(TAG, "onPublishButtonClicked called()");
@@ -237,6 +277,20 @@ public class ClientFragment extends Fragment implements ClientContract.View {
     }
 
     @Override
+    public void onUnSubscribeButtonClicked() {
+        mBinding.buttonUnSubscribe.setOnClickListener(view -> {
+            Log.d(TAG, "onUnSubscribeButtonClicked() called");
+            prepareDataForUnSubscribing();
+
+            if (InputValidation.isEmpty(mSubscribeTopic)) {
+                displayMessage("Enter Topic before un-subscribing.");
+            } else {
+                mViewModel.unSubscribeFromTopic(mUnSubscribeTopic);
+            }
+        });
+    }
+
+    @Override
     public void onDisconnectButtonClicked() {
         mBinding.buttonDisconnect.setOnClickListener(view -> {
             Log.d(TAG, "onDisconnectButtonClicked() called");
@@ -256,6 +310,9 @@ public class ClientFragment extends Fragment implements ClientContract.View {
 
         mViewModel.getSubscribeToTopicLiveData()
                 .observe(getViewLifecycleOwner(), observerSubscribeToTopic);
+
+        mViewModel.getUnSubscribeFromTopicLiveData()
+                .observe(getViewLifecycleOwner(), observerUnSubscribeFromTopic);
     }
 
     @Override

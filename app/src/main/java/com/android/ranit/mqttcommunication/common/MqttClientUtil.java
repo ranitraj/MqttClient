@@ -113,4 +113,17 @@ public class MqttClientUtil {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Un-Subscribe from MQTT Topic (through Broker)
+     */
+    public void unSubscribe(String topicName, IMqttActionListener listener) {
+        try {
+            Log.d(TAG, "unSubscribe: Un-Subscribing from broker with Topic = [" +topicName+ "]");
+
+            mMqttClient.unsubscribe(topicName, null, listener);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
 }

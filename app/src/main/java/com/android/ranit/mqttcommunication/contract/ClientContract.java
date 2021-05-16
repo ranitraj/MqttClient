@@ -8,8 +8,10 @@ public interface ClientContract {
     interface View {
         void prepareDataForPublishing();
         void prepareDataForSubscribing();
+        void prepareDataForUnSubscribing();
         void onPublishButtonClicked();
         void onSubscribeButtonClicked();
+        void onUnSubscribeButtonClicked();
         void onDisconnectButtonClicked();
         void attachObservers();
         void displayMessage(String message);
@@ -23,5 +25,6 @@ public interface ClientContract {
         void disconnectFromMqttBroker();
         void publishDataToMqttBroker(PublishPojo data);
         void subscribeToTopic(SubscribePojo data);
+        void unSubscribeFromTopic(String topicName);
     }
 }
